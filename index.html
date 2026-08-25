@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="mint">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>周承健 · AI 产品经理</title>
+  <meta name="description" content="周承健 — AI 产品经理，专注于将人工智能技术转化为有价值、有温度的用户产品。" />
+  <meta name="theme-color" id="themeColor" content="#f4f8f4" />
+  <script>
+    (() => {
+      try {
+        const initialTheme = localStorage.getItem("portfolio-theme");
+        if (["ember", "midnight", "mint"].includes(initialTheme)) {
+          document.documentElement.dataset.theme = initialTheme;
+        }
+      } catch (_) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Fira+Sans:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- 全局导航：编辑风格顶部栏，纯白画布 + 发丝分割线 -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="nav-right">
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="#about">关于</a></li>
+          <li><a href="#skills">技能</a></li>
+          <li><a href="#projects">作品</a></li>
+          <li><a href="#influence">影响力</a></li>
+          <li><a href="#contact">联系</a></li>
+        </ul>
+        <div class="nav-actions">
+          <div class="theme-switcher" role="group" aria-label="选择网站主题">
+            <button class="theme-option" type="button" data-theme="ember" aria-label="余烬编辑主题" aria-pressed="false" title="余烬编辑">
+              <span class="theme-swatch" aria-hidden="true"></span>
+            </button>
+            <button class="theme-option" type="button" data-theme="midnight" aria-label="极夜科技主题" aria-pressed="false" title="极夜科技">
+              <span class="theme-swatch" aria-hidden="true"></span>
+            </button>
+            <button class="theme-option is-active" type="button" data-theme="mint" aria-label="薄荷自然主题" aria-pressed="true" title="薄荷自然">
+              <span class="theme-swatch" aria-hidden="true"></span>
+            </button>
+          </div>
+          <button class="nav-toggle" id="navToggle" aria-label="菜单" aria-expanded="false" aria-controls="navMenu">
+            <span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 首页 Hero：文字与人物肖像的不对称编辑式版面 -->
+  <header id="home" class="hero">
+    <div class="hero-content">
+      <div class="hero-intro">
+        <p class="hero-eyebrow">AI PRODUCT MANAGER <span aria-hidden="true">/</span> AI 产品经理</p>
+        <h1 class="hero-title" aria-label="周承健"><span class="title-char" aria-hidden="true">周</span><span class="title-char" aria-hidden="true">承</span><span class="title-char" aria-hidden="true">健</span></h1>
+        <p class="hero-tagline">把复杂的技术，做成简单、有温度的产品</p>
+      </div>
+
+      <figure class="hero-portrait">
+        <div class="hero-portrait-frame">
+          <img
+            src="assets/profile-web.jpg"
+            alt="周承健的个人肖像"
+            width="1600"
+            height="1600"
+            decoding="async"
+            fetchpriority="high"
+          />
+        </div>
+        <figcaption class="hero-def">
+          <span class="def-text">专注 · 务实 · 保持好奇 —— 让 AI 真正服务于人</span>
+          <span class="def-translation" lang="en">Focused · Pragmatic · Always Curious — Building AI that Truly Serves People.</span>
+        </figcaption>
+      </figure>
+
+      <div class="hero-details">
+        <div class="hero-cta">
+          <a href="#projects" class="text-link hero-button hero-button-primary">查看作品 <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="#contact" class="text-link hero-button hero-button-secondary">联系我 <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+        <p class="hero-desc">
+          专注于将人工智能技术转化为有价值、有温度的用户产品。从需求洞察到产品落地，
+          关注每一个细节，用技术解决真实问题。
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- 关于我 -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-kicker" lang="en">PROFILE / ABOUT</p>
+        <h2 class="section-title">关于我</h2>
+        <p class="section-sub">一名专注于 AI 领域的产品经理，用技术解决真实问题。</p>
+      </div>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>
+            我擅长将复杂的人工智能技术，转化为简单、易用、真正解决
+            用户问题的产品。从需求洞察到产品落地，我关注每一个细节。
+          </p>
+          <p>
+            我相信好的产品始于对用户的深刻理解。工作之余，我热衷于
+            研究最新的 AI 技术趋势，并持续探索它们在实际场景中的落地可能。
+          </p>
+          <a href="#contact" class="text-link">了解更多 <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+        <div class="about-stats">
+          <div class="stat">
+            <span class="stat-number">3+</span>
+            <span class="stat-label">AI 年产品经验</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">12+</span>
+            <span class="stat-label">主导产品</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">1000+</span>
+            <span class="stat-label">服务用户</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">10+</span>
+            <span class="stat-label">协作团队</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 技能 -->
+  <section id="skills" class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-kicker" lang="en">CAPABILITIES / SKILLS</p>
+        <h2 class="section-title">我的技能</h2>
+        <p class="section-sub">从需求洞察到产品交付，覆盖产品全生命周期的能力。</p>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>AI 产品设计</h3>
+          <p>将大模型能力转化为实用的产品功能。</p>
+          <ul class="tag-list">
+            <li>大模型应用</li><li>智能体</li><li>Prompt 工程</li><li>RAG</li><li>Agent</li>
+          </ul>
+        </div>
+        <div class="skill-card">
+          <h3>产品规划</h3>
+          <p>定义清晰的产品方向与路线图。</p>
+          <ul class="tag-list">
+            <li>需求分析</li><li>PRD</li><li>产品路线图</li><li>竞品分析</li>
+          </ul>
+        </div>
+        <div class="skill-card">
+          <h3>用户研究</h3>
+          <p>洞察用户真实需求，用数据驱动决策。</p>
+          <ul class="tag-list">
+            <li>用户访谈</li><li>可用性测试</li><li>数据分析</li><li>A/B 测试</li>
+          </ul>
+        </div>
+        <div class="skill-card">
+          <h3>项目管理</h3>
+          <p>协调跨团队资源，保证产品高效迭代。</p>
+          <ul class="tag-list">
+            <li>敏捷开发</li><li>跨团队协作</li><li>版本迭代</li><li>OKR</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 作品 -->
+  <section id="projects" class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-kicker" lang="en">SELECTED WORK</p>
+        <h2 class="section-title">我的作品</h2>
+        <p class="section-sub">严肃解决问题，也认真对待每一个好玩的想法。</p>
+      </div>
+
+      <div class="project-collection enterprise-collection">
+        <div class="collection-heading">
+          <div>
+            <p class="collection-kicker" lang="en">01 / PROFESSIONAL WORK</p>
+            <h3 class="collection-title">企业级产品</h3>
+          </div>
+          <p class="collection-desc">面向真实业务、多角色协作与可持续交付的系统型产品。</p>
+        </div>
+        <div class="projects-grid enterprise-grid">
+          <a href="#" class="project-card enterprise-card">
+            <span class="project-index" aria-hidden="true">E01</span>
+            <h3>智能客服助手</h3>
+            <p>基于大模型的客服系统，自动理解用户意图并给出准确回复。</p>
+            <span class="text-link">了解更多 <span class="arrow" aria-hidden="true">→</span></span>
+          </a>
+          <a href="#" class="project-card enterprise-card">
+            <span class="project-index" aria-hidden="true">E02</span>
+            <h3>AI 写作助手</h3>
+            <p>帮助内容创作者高效生成、润色和改写各类文章。</p>
+            <span class="text-link">了解更多 <span class="arrow" aria-hidden="true">→</span></span>
+          </a>
+          <a href="#" class="project-card enterprise-card">
+            <span class="project-index" aria-hidden="true">E03</span>
+            <h3>数据洞察平台</h3>
+            <p>让业务人员用自然语言查询数据，自动生成可视化报告。</p>
+            <span class="text-link">了解更多 <span class="arrow" aria-hidden="true">→</span></span>
+          </a>
+          <a href="#" class="project-card enterprise-card">
+            <span class="project-index" aria-hidden="true">E04</span>
+            <h3>企业知识库</h3>
+            <p>企业级知识问答系统，支持多源文档的智能检索。</p>
+            <span class="text-link">了解更多 <span class="arrow" aria-hidden="true">→</span></span>
+          </a>
+        </div>
+      </div>
+
+      <div class="project-collection playground-collection">
+        <div class="collection-heading">
+          <div>
+            <p class="collection-kicker" lang="en">02 / CREATIVE PLAYGROUND</p>
+            <h3 class="collection-title">灵感游乐场</h3>
+          </div>
+          <p class="collection-desc">收录小工具、个人实验、游戏和那些单纯因为好玩而诞生的想法。</p>
+        </div>
+        <div class="projects-grid playground-grid">
+          <!-- 之后可将下面的占位卡片替换为真实个人项目 -->
+          <article class="project-card playground-card">
+            <span class="project-index" aria-hidden="true">P01</span>
+            <h3>个人作品，正在路上</h3>
+            <p>第一个好玩项目将放在这里，可以是 AI 小工具、交互实验或一次奇怪但有意思的尝试。</p>
+            <span class="playground-status"><span aria-hidden="true"></span> READY FOR THE NEXT IDEA</span>
+          </article>
+          <article class="project-card playground-card playground-card-alt">
+            <span class="project-index" aria-hidden="true">P02</span>
+            <h3>给灵感留个位置</h3>
+            <p>不需要 KPI，只记录好奇心、动手能力和一点点不务正业。</p>
+            <span class="playground-status"><span aria-hidden="true"></span> FOR TOOLS, GAMES & HAPPY ACCIDENTS</span>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 行业影响力 -->
+  <section id="influence" class="section influence-section">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-kicker" lang="en">INDUSTRY IMPACT</p>
+        <h2 class="section-title">行业影响力</h2>
+        <p class="section-sub">用开源实践与持续写作，分享产品方法、AI 应用经验和真实思考。</p>
+      </div>
+
+      <div class="influence-grid">
+        <a class="influence-card influence-github" href="https://github.com/Zhouchengjian-user" target="_blank" rel="noopener noreferrer">
+          <div class="influence-card-top">
+            <span class="influence-index">01 / OPEN SOURCE</span>
+            <span class="influence-mark" aria-hidden="true">GH</span>
+          </div>
+          <div class="influence-card-copy">
+            <h3>GitHub 与开源实践</h3>
+            <p>记录产品原型、AI 应用与动手构建的过程，让想法以代码和项目持续生长。</p>
+          </div>
+          <div class="influence-card-footer">
+            <span class="text-link">访问 GitHub <span class="arrow" aria-hidden="true">↗</span></span>
+            <span class="influence-url">github.com/Zhouchengjian-user</span>
+          </div>
+        </a>
+
+        <article class="influence-card influence-writing">
+          <div class="influence-card-top">
+            <span class="influence-index">02 / WRITING &amp; IDEAS</span>
+            <span class="influence-mark" aria-hidden="true">TXT</span>
+          </div>
+          <div class="influence-card-copy">
+            <h3>文章与行业思考</h3>
+            <p>这里将收录你关于 AI 产品、用户体验和行业观察的原创内容。</p>
+          </div>
+          <div class="writing-links" aria-label="待添加的文章链接">
+            <div class="writing-link">
+              <span class="writing-number">01</span>
+              <span class="writing-title">AI 产品文章 · 待添加<small lang="en">ARTICLE LINK / COMING SOON</small></span>
+              <span class="writing-arrow" aria-hidden="true">↗</span>
+            </div>
+            <div class="writing-link">
+              <span class="writing-number">02</span>
+              <span class="writing-title">行业观察文章 · 待添加<small lang="en">ARTICLE LINK / COMING SOON</small></span>
+              <span class="writing-arrow" aria-hidden="true">↗</span>
+            </div>
+            <div class="writing-link">
+              <span class="writing-number">03</span>
+              <span class="writing-title">个人思考文章 · 待添加<small lang="en">ARTICLE LINK / COMING SOON</small></span>
+              <span class="writing-arrow" aria-hidden="true">↗</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系 -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-kicker" lang="en">LET'S BUILD TOGETHER</p>
+        <h2 class="section-title">联系我</h2>
+        <p class="section-sub">让我们一起打造更好的产品。</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <p class="contact-lead">如果你有任何问题或合作意向，欢迎随时联系我。</p>
+          <div class="contact-item"><span class="contact-label">邮箱</span><a href="mailto:dilkhandilli253@gmail.com">dilkhandilli253@gmail.com</a></div>
+          <div class="contact-item"><span class="contact-label">电话</span><a href="tel:+8617302250679">（+86）173-0225-0679</a></div>
+          <div class="contact-item"><span class="contact-label">所在地</span><span>中国</span></div>
+          <div class="contact-item"><span class="contact-label">GitHub</span><a href="https://github.com/Zhouchengjian-user" target="_blank" rel="noopener noreferrer">github.com/Zhouchengjian-user <span aria-hidden="true">↗</span></a></div>
+        </div>
+        <form class="contact-form" id="contactForm">
+          <input type="text" name="name" placeholder="您的姓名" required />
+          <input type="email" name="email" placeholder="您的邮箱" required />
+          <textarea name="message" placeholder="您的留言" rows="5" required></textarea>
+          <button type="submit" class="text-link submit-btn">发送消息 <span class="arrow" aria-hidden="true">→</span></button>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p class="footer-note">© 2025 周承健 · 保留所有权利</p>
+      <div class="footer-links">
+        <a href="#about">关于</a>
+        <a href="#skills">技能</a>
+        <a href="#projects">作品</a>
+        <a href="#influence">影响力</a>
+        <a href="#contact">联系</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
