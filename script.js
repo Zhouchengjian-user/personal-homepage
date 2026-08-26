@@ -85,6 +85,50 @@ navMenu.querySelectorAll("a").forEach((link) => {
   link.addEventListener("click", () => setMenuState(false));
 });
 
+// ============ 产品介绍视频封面 ============
+document.querySelectorAll(".playground-video-card").forEach((card) => {
+  const video = card.querySelector(".playground-video");
+  const cover = card.querySelector(".video-cover");
+  const durationLabel = card.querySelector(".video-duration");
+
+  if (!video || !cover) return;
+
+  const formatDuration = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
+  };
+
+  const updateDuration = () => {
+    if (durationLabel && Number.isFinite(video.duration)) {
+      durationLabel.textContent = formatDuration(video.duration);
+    }
+  };
+
+  const restoreCover = () => {
+    card.classList.remove("is-playing");
+    cover.disabled = false;
+    video.controls = false;
+  };
+
+  video.controls = false;
+  video.addEventListener("loadedmetadata", updateDuration);
+  video.addEventListener("ended", restoreCover);
+
+  cover.addEventListener("click", async () => {
+    cover.disabled = true;
+    video.controls = true;
+    card.classList.add("is-playing");
+
+    try {
+      await video.play();
+      video.focus({ preventScroll: true });
+    } catch (_) {
+      restoreCover();
+    }
+  });
+});
+
 // 当前区块的导航高亮
 const sectionLinks = new Map(
   [...navMenu.querySelectorAll('a[href^="#"]')].map((link) => [

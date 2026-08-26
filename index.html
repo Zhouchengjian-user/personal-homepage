@@ -231,12 +231,36 @@
           <p class="collection-desc">收录小工具、个人实验、游戏和那些单纯因为好玩而诞生的想法。</p>
         </div>
         <div class="projects-grid playground-grid">
-          <!-- 之后可将下面的占位卡片替换为真实个人项目 -->
-          <article class="project-card playground-card">
-            <span class="project-index" aria-hidden="true">P01</span>
-            <h3>个人作品，正在路上</h3>
-            <p>第一个好玩项目将放在这里，可以是 AI 小工具、交互实验或一次奇怪但有意思的尝试。</p>
-            <span class="playground-status"><span aria-hidden="true"></span> READY FOR THE NEXT IDEA</span>
+          <article class="project-card playground-card playground-video-card" aria-label="CourtCast 项目演示视频">
+            <video id="courtCastVideo" class="playground-video" playsinline preload="metadata" aria-label="CourtCast 产品介绍视频">
+              <source src="assets/courtcast-social-promo-1080x1920-v8.mp4" type="video/mp4" />
+              您的浏览器暂不支持 HTML5 视频播放。
+            </video>
+            <button class="video-cover" type="button" aria-controls="courtCastVideo" aria-label="播放 CourtCast 产品介绍视频">
+              <span class="video-cover-top">
+                <span class="video-cover-kicker">PRODUCT INTRODUCTION</span>
+                <span class="video-cover-index">P01</span>
+              </span>
+              <span class="video-cover-visual" aria-hidden="true">
+                <span class="video-cover-orbit"></span>
+                <span class="video-cover-ball"></span>
+              </span>
+              <span class="video-cover-copy">
+                <span class="video-cover-title">CourtCast</span>
+                <span class="video-cover-desc">让每一场比赛，都拥有专业级的智能解说。</span>
+              </span>
+              <span class="video-cover-action">
+                <span class="video-play-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false">
+                    <path d="M9 7.5v9l7-4.5-7-4.5Z"></path>
+                  </svg>
+                </span>
+                <span class="video-cover-action-copy">
+                  <span>播放产品介绍</span>
+                  <small>WATCH DEMO <span class="video-duration"></span></small>
+                </span>
+              </span>
+            </button>
           </article>
           <article class="project-card playground-card playground-card-alt">
             <span class="project-index" aria-hidden="true">P02</span>
