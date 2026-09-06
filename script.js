@@ -175,7 +175,12 @@ document.querySelectorAll(".playground-video-card").forEach((card) => {
     const seconds = Math.floor(video.duration % 60);
     durationLabel.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   };
+  const feedback = card.querySelector(".video-feedback");
+  const actionLabel = card.querySelector(".video-action-label");
   const restoreCover = () => {
+    card.classList.remove("is-loading");
+    cover.removeAttribute("aria-busy");
+    if (actionLabel) actionLabel.textContent = "播放产品介绍";
     card.classList.remove("is-playing");
     cover.disabled = false;
     video.controls = false;
@@ -186,15 +191,26 @@ document.querySelectorAll(".playground-video-card").forEach((card) => {
   video.addEventListener("ended", restoreCover);
   cover.addEventListener("click", async () => {
     cover.disabled = true;
-    video.controls = true;
-    card.classList.add("is-playing");
+    cover.setAttribute("aria-busy", "true");
+    card.classList.add("is-loading");
+    if (feedback) feedback.textContent = "";
+    if (actionLabel) actionLabel.textContent = "正在加载…";
+    document.querySelectorAll(".playground-video").forEach(other => { if (other !== video) other.pause(); });
     try {
+      if (video.error) video.load();
       await video.play();
+      video.controls = true;
+      card.classList.remove("is-loading");
+      card.classList.add("is-playing");
+      cover.removeAttribute("aria-busy");
       video.focus({ preventScroll: true });
     } catch (_) {
       restoreCover();
+      if (feedback) feedback.textContent = "视频暂时无法播放，请检查网络后点击重试。";
+      if (actionLabel) actionLabel.textContent = "重新播放";
     }
   });
+  video.addEventListener("error", () => { restoreCover(); if (feedback) feedback.textContent = "视频加载失败，请检查网络后重试。"; });
 });
 
 // 当前区块高亮

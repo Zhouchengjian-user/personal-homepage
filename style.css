@@ -399,3 +399,40 @@ h1, h2, h3 { color: var(--ink-strong); overflow-wrap: anywhere; }
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
 
+/* finesse · component: personal-project-gallery · register=brand
+ * states: default, hover, focus-visible, active, disabled, loading, error, playing
+ * tokens: inherited portfolio themes; CSS motion highlights playback. */
+.playground-grid-four { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.playground-grid-four > * { min-width: 0; min-height: 460px; }
+.product-film .video-cover { padding: 28px; align-items: center; }
+.product-film .video-cover::after { display: none; }
+.product-film .video-cover-top { width: 100%; }
+.product-logo-stage { display: grid; place-items: center; flex: 1; min-height: 145px; position: relative; z-index: 3; }
+.product-film-logo { width: 112px; height: 112px; object-fit: contain; border-radius: 26px; filter: drop-shadow(0 14px 24px rgba(var(--accent-rgb), .14)); transition: transform .3s ease; }
+.product-film .video-cover-copy { width: 100%; margin: 8px 0 28px; text-align: center; justify-items: center; }
+.product-film .video-cover-copy strong { font-size: clamp(34px, 4vw, 50px); line-height: 1.05; overflow-wrap: anywhere; }
+.product-film .video-cover-copy > span { font-size: 14px; max-width: 360px; }
+.product-film .video-cover-action { align-self: center; gap: 20px; min-height: 80px; }
+.product-film .video-cover-action strong { font-size: 15px; white-space: nowrap; }
+.product-film .video-cover-action small { font-size: 9px; }
+.product-film .video-play-icon { position: relative; width: 72px; height: 72px; flex: 0 0 72px; box-shadow: 0 0 32px rgba(var(--accent-rgb), .35); }
+.product-film .video-play-icon svg { width: 32px; height: 32px; }
+.product-film .video-play-icon::before, .product-film .video-play-icon::after { content: ""; position: absolute; inset: -8px; border: 1px solid var(--accent); border-radius: 50%; opacity: 0; animation: film-play-pulse 2.8s ease-out infinite; pointer-events: none; }
+.product-film .video-play-icon::after { animation-delay: 1.4s; }
+@keyframes film-play-pulse { 0% { transform: scale(.88); opacity: .65; } 100% { transform: scale(1.35); opacity: 0; } }
+@media (hover: hover) and (pointer: fine) { .product-film .video-cover:hover .product-film-logo { transform: translateY(-5px); } .product-film .video-cover:hover .video-play-icon { transform: scale(1.12); } }
+.product-film .video-cover:focus-visible { outline: 3px solid var(--accent); outline-offset: -7px; }
+.product-film .video-cover:active .video-play-icon { transform: scale(.95); }
+.product-film .video-cover:disabled { cursor: wait; }
+.product-film .video-cover:disabled .video-cover-action { opacity: .6; }
+.product-film.is-loading .video-play-icon::before { animation-duration: 1s; }
+.product-film.is-playing .video-play-icon::before, .product-film.is-playing .video-play-icon::after { animation: none; }
+.video-feedback { position: absolute; z-index: 4; bottom: 8px; left: 20px; right: 20px; margin: 0; color: var(--video-ink); font-size: 12px; text-align: center; pointer-events: none; }
+.playground-slot { border-style: dashed; }
+.playground-slot::before { display: none; }
+.slot-content { text-align: center; }
+.slot-plus { display: block; margin-bottom: 18px; color: var(--muted); font-size: 50px; font-weight: 300; line-height: 1; }
+.playground-slot h3 { font-size: clamp(23px, 2.5vw, 30px); line-height: 1.2; }
+.playground-slot p { font-size: 14px; }
+@media (max-width: 700px) { .playground-grid-four { grid-template-columns: minmax(0, 1fr); } .playground-grid-four > * { min-height: 430px; } .product-film .video-cover { padding: 24px 20px; } .playground-grid-four .playground-slot { min-height: 300px; } }
+@media (prefers-reduced-motion: reduce) { .product-film .video-play-icon::before, .product-film .video-play-icon::after { animation: none; opacity: .25; transform: none; } .product-film .video-play-icon::after { display: none; } .product-film-logo { transition: none; } }
