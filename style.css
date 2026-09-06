@@ -398,3 +398,6 @@ h1, h2, h3 { color: var(--ink-strong); overflow-wrap: anywhere; }
   .reveal, .skill-row.reveal, .project-row.reveal, .topic-row.reveal { opacity: 1; clip-path: none; transform: none; transition: none; }
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* Featured enterprise project cover. */
+.project-row-featured .project-cover { grid-column: 1 / -1; display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 12px; }
