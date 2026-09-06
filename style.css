@@ -436,3 +436,7 @@ h1, h2, h3 { color: var(--ink-strong); overflow-wrap: anywhere; }
 .playground-slot p { font-size: 14px; }
 @media (max-width: 700px) { .playground-grid-four { grid-template-columns: minmax(0, 1fr); } .playground-grid-four > * { min-height: 430px; } .product-film .video-cover { padding: 24px 20px; } .playground-grid-four .playground-slot { min-height: 300px; } }
 @media (prefers-reduced-motion: reduce) { .product-film .video-play-icon::before, .product-film .video-play-icon::after { animation: none; opacity: .25; transform: none; } .product-film .video-play-icon::after { display: none; } .product-film-logo { transition: none; } }
+
+/* Personal work first; company work follows as its own section. */
+#projects, #company-projects { scroll-margin-top: 100px; }
+.company-projects-section { min-height: calc(100svh - 80px); }

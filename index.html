@@ -101,43 +101,64 @@
       </div>
     </section>
 
-    <section id="projects" class="section projects-section">
+    <section id="projects" class="section projects-section" aria-labelledby="ai-projects-title">
       <div class="container">
-        <div class="section-header projects-header"><p class="section-kicker" lang="en">SELECTED WORK / 2026</p><h2 class="section-title">我的作品</h2><p class="section-sub">严肃解决问题，也认真对待每一个好玩的想法。</p></div>
-        <div class="project-collection enterprise-collection">
-          <div class="collection-heading"><h3 class="collection-title"><span aria-hidden="true">01</span> 公司项目</h3><p class="collection-desc">面向真实业务、多角色协作与可持续交付的系统型产品。</p></div>
-          <div class="enterprise-list">
-            <article class="project-row" aria-labelledby="company-project-1-title"><span class="project-index" aria-hidden="true">E01</span><div class="project-copy"><h3 id="company-project-1-title">AI 批量化生产工厂</h3><p>将产品点子转化为需求文档、代码与可运行原型，通过多模型 Agent 协作和阶段确认，统一管理多个项目的研发进程。</p></div><ul class="project-meta" aria-label="产品能力"><li>多模型协作</li><li>研发流程编排</li><li>多项目管理</li></ul></article>
-            <article class="project-row" aria-labelledby="construction-review-title"><span class="project-index" aria-hidden="true">E02</span><div class="project-copy"><h3 id="construction-review-title">危大方案智审平台</h3><p>面向建筑专项施工方案，辅助识别严重缺陷、内容缺失与前后矛盾，生成可追溯的结构化审查意见。</p></div><ul class="project-meta" aria-label="产品能力"><li>Agent 工作流</li><li>RAG 知识库</li><li>可追溯审查</li></ul></article>
-            <article class="project-row" aria-labelledby="company-project-3-title"><span class="project-index" aria-hidden="true">E03</span><div class="project-copy"><h3 id="company-project-3-title">展厅数字人</h3><p>面向展厅接待与企业讲解，通过实时语音交流、插话打断和展项联动，让访客按兴趣了解企业与项目。</p></div><ul class="project-meta" aria-label="产品能力"><li>实时语音</li><li>插话打断</li><li>展项联动</li></ul></article>
-          </div>
-        </div>
-
+        <div class="section-header projects-header"><h2 id="ai-projects-title" class="section-title">我的AI项目</h2><p class="section-sub">收录个人AI作品、小工具、个人实验和那些单纯好玩而诞生的想法</p></div>
         <div class="project-collection playground-collection">
-          <div class="collection-heading"><h3 class="collection-title"><span aria-hidden="true">02</span> 灵感游乐场</h3><p class="collection-desc">收录个人AI作品、小工具、个人实验和那些单纯好玩而诞生的想法</p></div>
           <div class="playground-grid playground-grid-four">
-            <article class="playground-video-card product-film" aria-label="CourtCast 项目演示视频">
-              <video id="courtCastVideo" class="playground-video" playsinline preload="none" tabindex="0" aria-label="CourtCast 产品介绍视频"><source src="assets/courtcast-social-promo-1080x1920-v8.mp4" type="video/mp4" />您的浏览器暂不支持 HTML5 视频播放。</video>
-              <button class="video-cover" type="button" aria-controls="courtCastVideo" aria-label="播放 CourtCast 产品介绍视频">
+            <article class="playground-video-card product-film" aria-label="索见 项目演示视频">
+              <video id="suojianVideo" class="playground-video" playsinline preload="none" tabindex="0" aria-label="索见 产品介绍视频"><source src="assets/suojian-product-intro.mp4" type="video/mp4" />您的浏览器暂不支持 HTML5 视频播放。</video>
+              <button class="video-cover" type="button" aria-controls="suojianVideo" aria-label="播放 索见 产品介绍视频">
                 <span class="video-cover-top"><span>个人 AI 作品</span><span>P01</span></span>
-                <span class="product-logo-stage"><img class="product-film-logo" src="assets/courtcast-logo.svg" alt="CourtCast Logo" width="112" height="112" loading="lazy" /></span>
-                <span class="video-cover-copy"><strong>CourtCast</strong><span>让每一场比赛，都拥有专业级的智能解说。</span></span>
-                <span class="video-cover-action"><span class="video-play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M9 7.5v9l7-4.5-7-4.5Z"></path></svg></span><span><strong class="video-action-label">播放产品介绍</strong><small>WATCH DEMO <span class="video-duration"></span></small></span></span>
+                <span class="product-logo-stage"><img class="product-film-logo" src="assets/suojian-logo.svg" alt="索见 Logo" width="112" height="112" loading="lazy" /></span>
+                <span class="video-cover-copy"><strong>索见</strong><span>多模态素材检索，用文字、图片或视频找到需要的镜头片段。</span></span>
+                <span class="video-cover-action"><span class="video-play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M9 7.5v9l7-4.5-7-4.5Z"></path></svg></span><span><strong class="video-action-label">播放产品介绍</strong><small>WATCH DEMO <span class="video-duration">00:40</span></small></span></span>
+              </button>
+              <p class="video-feedback" role="status" aria-live="polite"></p>
+            </article>
+            <article class="playground-video-card product-film" aria-label="Motif Cue 项目演示视频">
+              <video id="motifCueVideo" class="playground-video" playsinline preload="none" tabindex="0" aria-label="Motif Cue 产品介绍视频"><source src="assets/motif-cue-product-intro.mp4" type="video/mp4" />您的浏览器暂不支持 HTML5 视频播放。</video>
+              <button class="video-cover" type="button" aria-controls="motifCueVideo" aria-label="播放 Motif Cue 产品介绍视频">
+                <span class="video-cover-top"><span>个人 AI 作品</span><span>P02</span></span>
+                <span class="product-logo-stage"><img class="product-film-logo" src="assets/motif-cue-logo.svg" alt="Motif Cue Logo" width="112" height="112" loading="lazy" /></span>
+                <span class="video-cover-copy"><strong>Motif Cue</strong><span>将视频与字幕转化为可编辑的动效，让创作更有表现力。</span></span>
+                <span class="video-cover-action"><span class="video-play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M9 7.5v9l7-4.5-7-4.5Z"></path></svg></span><span><strong class="video-action-label">播放产品介绍</strong><small>WATCH DEMO <span class="video-duration">00:40</span></small></span></span>
               </button>
               <p class="video-feedback" role="status" aria-live="polite"></p>
             </article>
             <article class="playground-video-card product-film" aria-label="LAYRA 项目演示视频">
               <video id="layraVideo" class="playground-video" playsinline preload="none" tabindex="0" aria-label="LAYRA 产品介绍视频"><source src="assets/layra-product-intro.mp4" type="video/mp4" />您的浏览器暂不支持 HTML5 视频播放。</video>
               <button class="video-cover" type="button" aria-controls="layraVideo" aria-label="播放 LAYRA 产品介绍视频">
-                <span class="video-cover-top"><span>个人 AI 作品</span><span>P02</span></span>
+                <span class="video-cover-top"><span>个人 AI 作品</span><span>P03</span></span>
                 <span class="product-logo-stage"><img class="product-film-logo" src="assets/layra-logo.svg" alt="LAYRA Logo" width="112" height="112" loading="lazy" /></span>
                 <span class="video-cover-copy"><strong>LAYRA</strong><span>智能穿搭助手，让衣橱里的每一件都有新可能。</span></span>
                 <span class="video-cover-action"><span class="video-play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M9 7.5v9l7-4.5-7-4.5Z"></path></svg></span><span><strong class="video-action-label">播放产品介绍</strong><small>WATCH DEMO <span class="video-duration">00:45</span></small></span></span>
               </button>
               <p class="video-feedback" role="status" aria-live="polite"></p>
             </article>
-            <article class="playground-note playground-slot" aria-label="个人作品预留位置 P03"><span class="project-index">P03</span><div class="slot-content"><span class="slot-plus" aria-hidden="true">＋</span><h3>下一个作品，留待揭晓</h3><p>留给新的个人 AI 作品、小工具与有趣实验。</p></div><span class="playground-status">作品准备中</span></article>
-            <article class="playground-note playground-slot" aria-label="个人作品预留位置 P04"><span class="project-index">P04</span><div class="slot-content"><span class="slot-plus" aria-hidden="true">＋</span><h3>下一个作品，留待揭晓</h3><p>留给新的个人 AI 作品、小工具与有趣实验。</p></div><span class="playground-status">作品准备中</span></article>
+            <article class="playground-video-card product-film" aria-label="CourtCast 项目演示视频">
+              <video id="courtCastVideo" class="playground-video" playsinline preload="none" tabindex="0" aria-label="CourtCast 产品介绍视频"><source src="assets/courtcast-social-promo-1080x1920-v8.mp4" type="video/mp4" />您的浏览器暂不支持 HTML5 视频播放。</video>
+              <button class="video-cover" type="button" aria-controls="courtCastVideo" aria-label="播放 CourtCast 产品介绍视频">
+                <span class="video-cover-top"><span>个人 AI 作品</span><span>P04</span></span>
+                <span class="product-logo-stage"><img class="product-film-logo" src="assets/courtcast-logo.svg" alt="CourtCast Logo" width="112" height="112" loading="lazy" /></span>
+                <span class="video-cover-copy"><strong>CourtCast</strong><span>让每一场比赛，都拥有专业级的智能解说。</span></span>
+                <span class="video-cover-action"><span class="video-play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M9 7.5v9l7-4.5-7-4.5Z"></path></svg></span><span><strong class="video-action-label">播放产品介绍</strong><small>WATCH DEMO <span class="video-duration"></span></small></span></span>
+              </button>
+              <p class="video-feedback" role="status" aria-live="polite"></p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="company-projects" class="section company-projects-section" aria-labelledby="company-projects-title">
+      <div class="container">
+        <div class="section-header"><h2 id="company-projects-title" class="section-title">公司项目</h2><p class="section-sub">面向真实业务、多角色协作与可持续交付的系统型产品。</p></div>
+        <div class="project-collection enterprise-collection">
+          <div class="enterprise-list">
+            <article class="project-row" aria-labelledby="company-project-1-title"><span class="project-index" aria-hidden="true">E01</span><div class="project-copy"><h3 id="company-project-1-title">AI 批量化生产工厂</h3><p>将产品点子转化为需求文档、代码与可运行原型，通过多模型 Agent 协作和阶段确认，统一管理多个项目的研发进程。</p></div><ul class="project-meta" aria-label="产品能力"><li>多模型协作</li><li>研发流程编排</li><li>多项目管理</li></ul></article>
+            <article class="project-row" aria-labelledby="construction-review-title"><span class="project-index" aria-hidden="true">E02</span><div class="project-copy"><h3 id="construction-review-title">危大方案智审平台</h3><p>面向建筑专项施工方案，辅助识别严重缺陷、内容缺失与前后矛盾，生成可追溯的结构化审查意见。</p></div><ul class="project-meta" aria-label="产品能力"><li>Agent 工作流</li><li>RAG 知识库</li><li>可追溯审查</li></ul></article>
+            <article class="project-row" aria-labelledby="company-project-3-title"><span class="project-index" aria-hidden="true">E03</span><div class="project-copy"><h3 id="company-project-3-title">展厅数字人</h3><p>面向展厅接待与企业讲解，通过实时语音交流、插话打断和展项联动，让访客按兴趣了解企业与项目。</p></div><ul class="project-meta" aria-label="产品能力"><li>实时语音</li><li>插话打断</li><li>展项联动</li></ul></article>
           </div>
         </div>
       </div>
