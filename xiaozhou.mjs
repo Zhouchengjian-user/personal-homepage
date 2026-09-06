@@ -1,198 +1,153 @@
 import { answerQuestion, suggestedQuestions } from './xiaozhou-knowledge.mjs';
 import { assistantConfig } from './xiaozhou-config.mjs';
+import { XiaozhouRealtime } from './xiaozhou-realtime.mjs';
 
+const GREETING = '你好，我是小周，承健的数字人助手。想了解他的经历、项目和产品思考，直接和我聊聊吧。';
 const portrait = document.querySelector('.hero-portrait');
 if (portrait) initAssistant(portrait);
 
 function initAssistant(portrait) {
   const dock = document.createElement('div');
-  dock.className = 'xz-dock';
-  dock.dataset.state = 'idle';
-  dock.innerHTML = `<span class="xz-art" aria-hidden="true">
-    <img src="${new URL('./xiaozhou-robot.png', import.meta.url)}" alt="" width="1024" height="1536" decoding="async">
-    <svg class="xz-face" viewBox="0 0 1024 1536" fill="none"><g class="xz-eyes" fill="currentColor"><ellipse cx="361" cy="377" rx="40" ry="47"/><ellipse cx="585" cy="369" rx="40" ry="47"/></g><path class="xz-mouth" d="M419 461 Q480 520 535 457" stroke="currentColor" stroke-width="17" stroke-linecap="round"/></svg>
-  </span><button class="xz-launch" type="button" aria-haspopup="dialog" aria-controls="xiaozhou-dialog" aria-expanded="false"><i aria-hidden="true"></i>和小周聊聊<span aria-hidden="true">↗</span></button>`;
+  dock.className = 'xz-dock'; dock.dataset.state = 'idle';
+  const avatar = `<span class="xz-art" aria-hidden="true"><img src="${new URL('./xiaozhou-robot.png', import.meta.url)}" alt="" width="1024" height="1536" decoding="async"><svg class="xz-face" viewBox="0 0 1024 1536" fill="none"><g class="xz-eyes" fill="currentColor"><ellipse cx="361" cy="377" rx="40" ry="47"/><ellipse cx="585" cy="369" rx="40" ry="47"/></g><path class="xz-mouth" d="M419 461 Q480 520 535 457" stroke="currentColor" stroke-width="17" stroke-linecap="round"/></svg></span>`;
+  dock.innerHTML = `${avatar}<button class="xz-launch" type="button" aria-haspopup="dialog" aria-controls="xiaozhou-dialog" aria-expanded="false"><i aria-hidden="true"></i><span class="xz-invite">我是数字人小周<span>想聊聊吗？</span></span><span aria-hidden="true">↗</span></button>`;
   portrait.append(dock);
-  const avatarImage = dock.querySelector('.xz-art img');
-  // Show face and body together after the transparent bitmap is decoded.
-  avatarImage.decode().then(() => avatarImage.parentElement.classList.add('is-ready')).catch(() => {});
-  const launch = dock.querySelector('button');
+  const launch = dock.querySelector('.xz-launch');
   const dialog = document.createElement('dialog');
-  dialog.id = 'xiaozhou-dialog'; dialog.className = 'xz-dialog';
+  dialog.id = 'xiaozhou-dialog'; dialog.className = 'xz-dialog'; dialog.dataset.view = 'voice';
   dialog.setAttribute('aria-labelledby', 'xz-title');
-  dialog.innerHTML = `<div class="xz-head"><span class="xz-symbol" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="9" width="26" height="20" rx="7"/><path d="M16 9V4M10 22q6 5 12 0"/><circle cx="16" cy="3" r="2"/><path d="M10 16v2M22 16v2" stroke-width="3" stroke-linecap="round"/></svg></span><div class="xz-heading"><h2 id="xz-title">小周 · AI 产品助手</h2><p>聊经历、聊项目，也聊产品思考</p></div><button class="xz-icon" type="button" aria-label="关闭小周对话">×</button></div>
-  <p class="xz-mode">简历演示问答 · 模型待接入</p>
-  <div class="xz-log" role="log" aria-label="与小周的对话" aria-live="polite" aria-relevant="additions"></div>
-  <form class="xz-form"><div class="xz-status" role="status"><p>可以直接输入，或点一个问题开始</p><button class="xz-stop" type="button" hidden>停止</button></div>
-  <div class="xz-entry"><textarea class="xz-input" rows="1" maxlength="600" aria-label="向小周提问" placeholder="问问我的项目、经历或能力…"></textarea><button class="xz-send" type="submit" aria-label="发送问题" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 12 7-7 7 7M12 5v15"/></svg></button></div>
-  <div class="xz-tools"><button class="xz-tool xz-mic" type="button" aria-pressed="false">语音输入</button><button class="xz-tool xz-hints" type="button">问题提示</button><button class="xz-tool xz-clear" type="button">重新开始</button></div></form>`;
+  dialog.innerHTML = `<div class="xz-head"><span class="xz-symbol" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="9" width="26" height="20" rx="7"/><path d="M16 9V4M10 22q6 5 12 0"/><circle cx="16" cy="3" r="2"/><path d="M10 16v2M22 16v2" stroke-width="3" stroke-linecap="round"/></svg></span><div class="xz-heading"><h2 id="xz-title">小周 · 承健的数字人助手</h2><p>聊经历、聊项目，也聊产品思考</p></div><button class="xz-icon" type="button" aria-label="关闭对话并结束通话">×</button></div>
+    <div class="xz-voice-stage"><div class="xz-call-avatar">${avatar}</div><div class="xz-call-info"><p class="xz-call-label">连接后直接说话</p><div class="xz-wave" aria-hidden="true">${Array.from({length:9},()=>'<i></i>').join('')}</div><span class="xz-call-time" aria-label="通话时长">00:00</span></div></div>
+    <p class="xz-mode">允许麦克风后，小周会先和你打招呼</p>
+    <div class="xz-status" role="status"><p>正在准备语音…</p></div>
+    <div class="xz-log" role="log" aria-label="与小周的对话记录" aria-live="polite" aria-relevant="additions text"></div>
+    <div class="xz-prompt-list" hidden><p>可以直接这样问小周</p></div>
+    <div class="xz-call-controls"><button class="xz-mute xz-call-button" type="button" aria-pressed="false" disabled>静音</button><button class="xz-interrupt xz-call-button" type="button" disabled>打断小周</button><button class="xz-hangup xz-call-button" type="button">结束通话</button><button class="xz-reconnect xz-call-button" type="button" hidden>重新开麦</button></div>
+    <form class="xz-form" hidden><div class="xz-entry"><textarea class="xz-input" rows="1" maxlength="600" aria-label="向小周提问" placeholder="输入问题，了解承健的经历和项目…"></textarea><button class="xz-send" type="submit" aria-label="发送问题" disabled>↑</button></div></form>
+    <div class="xz-tools"><button class="xz-tool xz-hints" type="button" aria-expanded="false">不知道聊什么？</button><button class="xz-tool xz-text-mode" type="button">暂不开麦，打字聊</button></div>`;
   document.body.append(dialog);
-  const $ = (selector) => dialog.querySelector(selector);
-  const log = $('.xz-log'), input = $('.xz-input'), send = $('.xz-send');
-  const status = $('.xz-status p'), stop = $('.xz-stop'), mic = $('.xz-mic');
-  const controller = { turn: 0, request: null, recognition: null, history: [], state: 'idle' };
-  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let endpoint = null;
-  try {
-    if (assistantConfig.endpoint) {
-      const url = new URL(assistantConfig.endpoint, location.href);
-      if (url.protocol !== 'https:' && !(url.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(url.hostname))) throw new Error('invalid endpoint');
-      endpoint = url.href;
+  for (const img of [dock.querySelector('img'), dialog.querySelector('.xz-art img')]) {
+    img.decode().then(()=>img.parentElement.classList.add('is-ready')).catch(()=>{});
+  }
+  const $ = selector=>dialog.querySelector(selector);
+  const log=$('.xz-log'), input=$('.xz-input'), send=$('.xz-send'), status=$('.xz-status p');
+  const rows=new Map(), history=[]; let client=null, callEpoch=0, timer=null, started=0, pendingText=0;
+  const stateMessages={connecting:'请允许使用麦克风，正在连接小周…',listening:'我在听，你可以直接说话',thinking:'小周正在想一想…',speaking:'小周正在说话，你可以随时插话',muted:'麦克风已静音，点击“取消静音”继续',idle:'通话已结束，麦克风已释放'};
+  function setState(state,message,error=false) {
+    dock.dataset.state=state; dialog.dataset.state=state;
+    status.textContent=message || stateMessages[state] || '';
+    $('.xz-status').dataset.error=String(error);
+    const connected=Boolean(client?.connected), muted=Boolean(client?.muted);
+    $('.xz-mute').disabled=!connected; $('.xz-mute').textContent=muted?'取消静音':'静音';
+    $('.xz-mute').setAttribute('aria-pressed',String(muted));
+    $('.xz-interrupt').disabled=!connected || !['speaking','thinking'].includes(state);
+    $('.xz-hangup').hidden=!['connecting','listening','thinking','speaking','muted'].includes(state);
+    $('.xz-reconnect').hidden=['connecting','listening','thinking','speaking','muted'].includes(state);
+    $('.xz-call-label').textContent=state==='speaking'?'小周在说':state==='listening'?'麦克风已开启':state==='muted'?'麦克风已静音':state==='connecting'?'正在连接':'期待下次聊天';
+  }
+  function amplitude(level) {
+    const value=Math.max(0,Math.min(1,Number(level)||0));
+    for (const mouth of [dock.querySelector('.xz-mouth'), dialog.querySelector('.xz-mouth')]) {
+      mouth.style.transform=value ? `scaleY(${.65+value*2.5})` : '';
     }
-  } catch { /* Invalid configuration remains in local demo mode. */ }
-  if (endpoint) $('.xz-mode').textContent = '基于简历与主页资料回答';
-  if (!Recognition) { mic.disabled = true; mic.textContent = '此浏览器暂不支持语音输入'; }
-
-  function setState(state, message, error = false) {
-    controller.state = state; dock.dataset.state = state;
-    status.textContent = message;
-    $('.xz-status').dataset.error = String(error);
-    stop.hidden = !['thinking', 'speaking', 'listening'].includes(state);
-    stop.textContent = state === 'speaking' ? '打断播报' : '停止';
-    mic.setAttribute('aria-pressed', String(state === 'listening'));
+    if (client?.state==='speaking') wave(value);
   }
-  function cancel(message = '已停止，可以继续提问') {
-    controller.turn++;
-    controller.request?.abort(); controller.request = null;
-    const recognition = controller.recognition; controller.recognition = null;
-    recognition?.abort();
-    window.speechSynthesis?.cancel();
-    setState('idle', message);
+  function wave(level) {
+    const value=Math.max(0,Math.min(1,Number(level)||0));
+    $('.xz-wave').style.setProperty('--xz-level',value);
   }
-  function createMessage(role, text) {
-    const item = document.createElement('article'); item.className = 'xz-message'; item.dataset.role = role;
-    const p = document.createElement('p'); p.textContent = text; item.append(p); log.append(item);
-    log.scrollTop = log.scrollHeight;
-    return item;
+  function append(role,text,id) {
+    const item=document.createElement('article');item.className='xz-message';item.dataset.role=role;
+    const p=document.createElement('p');p.textContent=text;item.append(p);log.append(item);
+    if(id)rows.set(id,item);
+    while(log.children.length>40) { const first=log.firstElementChild; for(const [key,row] of rows)if(row===first)rows.delete(key); first.remove(); }
+    log.scrollTop=log.scrollHeight;return item;
   }
-  function addHints(container) {
-    const old = log.querySelector('.xz-questions'); old?.remove();
-    const grid = document.createElement('div'); grid.className = 'xz-questions';
-    for (const q of suggestedQuestions) {
-      const button = document.createElement('button'); button.className = 'xz-question'; button.type = 'button';
-      button.textContent = typeof q === 'string' ? q : q.question || q.text;
-      button.addEventListener('click', () => ask(button.textContent)); grid.append(button);
-    }
-    container.append(grid); log.scrollTop = log.scrollHeight;
+  function transcript({id,role,text,final}) {
+    if(!text)return;
+    let item=rows.get(id);
+    if(!item) item=append(role,text,id); else item.querySelector('p').textContent=text;
+    item.dataset.final=String(Boolean(final));log.scrollTop=log.scrollHeight;
   }
-  function welcome() {
-    const item = createMessage('assistant', '你好，我是小周，周承健的 AI 产品助手。想了解他的项目经验、产品能力，或者从工程到 AI 的经历，都可以问我。');
-    addHints(item);
+  function resetTimer() {clearInterval(timer);timer=null;started=0;$('.xz-call-time').textContent='00:00';}
+  function beginTimer(){if(timer)return;started=Date.now();timer=setInterval(()=>{const s=Math.floor((Date.now()-started)/1000);$('.xz-call-time').textContent=`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;},1000);}
+  function endCall(message='通话已结束，麦克风已释放') {
+    callEpoch++; const old=client;client=null;old?.stop();clearInterval(timer);timer=null;amplitude(0);wave(0);setState('idle',message);
   }
-  function speak(text) {
-    cancel('准备播报');
-    if (!('speechSynthesis' in window)) return setState('idle', '此浏览器不支持朗读，可以直接阅读回答');
-    setState('speaking', '准备播报，可以随时停止');
-    const turn = controller.turn;
-    const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'zh-CN'; utterance.rate = 1.04;
-    const voices = speechSynthesis.getVoices().filter(v => /^zh/i.test(v.lang));
-    utterance.voice = voices.find(v => /ting.?ting|yunxi|male|kangkang/i.test(v.name)) || voices[0] || null;
-    utterance.onstart = () => { if (turn === controller.turn) setState('speaking', '小周正在播报，随时可以打断'); };
-    utterance.onend = () => { if (turn === controller.turn) setState('idle', '播报完成，还想了解什么？'); };
-    utterance.onerror = () => { if (turn === controller.turn) setState('idle', '暂时无法朗读，请阅读文字回答', true); };
-    speechSynthesis.speak(utterance);
+  function realtimeURL() {
+    let target=assistantConfig.realtimeEndpoint;
+    if(!target && ['127.0.0.1','localhost'].includes(location.hostname)) target=`ws://${location.hostname}:5183/api/realtime`;
+    if(!target)return null;
+    const url=new URL(target,location.href);
+    if(location.protocol==='https:' && !['https:','wss:'].includes(url.protocol))return null;
+    if(!['http:','https:','ws:','wss:'].includes(url.protocol))return null;
+    return url.href;
   }
-  function addAnswer(result) {
-    const item = createMessage('assistant', result.text);
-    if (Array.isArray(result.sources)) {
-      const sources = document.createElement('div'); sources.className = 'xz-sources';
-      for (const source of result.sources.filter(s => s && typeof s === 'object').slice(0,3)) {
-        const el = document.createElement('span'); el.textContent = typeof source.label === 'string' ? source.label : '简历与主页资料';
-        // Sources never execute arbitrary model-provided URLs.
-        const knownAnchors = ['home','about','skills','projects','influence','contact'];
-        const hash = typeof source.url === 'string' && (source.url.startsWith('#') || source.url.startsWith('https://zhouchengjian-user.github.io/personal-homepage/#')) ? source.url.split('#')[1] : '';
-        if (knownAnchors.includes(hash)) {
-          const link = document.createElement('a'); link.href = '#' + hash; link.textContent = el.textContent;
-          link.addEventListener('click', () => dialog.close()); sources.append(link);
-        } else sources.append(el);
-      }
-      item.append(sources);
-    }
-    if ('speechSynthesis' in window) {
-      const read = document.createElement('button'); read.className = 'xz-read'; read.type = 'button'; read.textContent = '◖ 朗读回答';
-      read.addEventListener('click', () => speak(result.text)); item.append(read);
-    }
-    log.scrollTop = log.scrollHeight;
+  function errorMessage(error) {
+    if(['NotAllowedError','PermissionDeniedError'].includes(error?.name)) return '麦克风未获授权。允许浏览器使用麦克风后，点击“重新开麦”；也可以先打字聊。';
+    if(error?.name==='NotFoundError')return '没有找到麦克风，请连接设备后重试，也可以先打字聊。';
+    if(error?.name==='NotReadableError')return '麦克风暂时被占用，请关闭其他占用麦克风的应用后重试。';
+    return error?.message || '语音连接失败，请稍后重试，也可以先打字聊。';
   }
-  async function ask(raw) {
-    const question = raw.trim().slice(0,600); if (!question) return;
-    cancel('小周正在整理资料…');
-    const turn = controller.turn;
-    input.value = ''; send.disabled = true;
-    createMessage('user', question);
-    setState('thinking', '小周正在整理资料…');
-    const request = new AbortController(); controller.request = request;
-    let timedOut = false;
-    const timer = setTimeout(() => { timedOut = true; request.abort(); }, assistantConfig.timeoutMs || 20000);
-    try {
-      let result;
-      if (endpoint) {
-        const response = await fetch(endpoint, {
-          method:'POST', headers:{'Content-Type':'application/json'}, credentials:'omit', signal:request.signal,
-          body:JSON.stringify({question,history:controller.history.slice(-10).map(({role,content,topic}) => ({role,content,topic}))})
-        });
-        if (!response.ok) throw new Error('service');
-        result = await response.json();
-        if (!result || typeof result.text !== 'string' || !result.text.trim()) throw new Error('response');
-        result = {...result, text:result.text.slice(0,6000)};
-      } else {
-        // A brief asynchronous transition gives the user visible cancellation feedback.
-        await new Promise(resolve => setTimeout(resolve, 220));
-        result = answerQuestion(question, controller.history);
-      }
-      if (turn !== controller.turn || request.signal.aborted) return;
-      addAnswer(result);
-      controller.history.push({role:'user',content:question},{role:'assistant',content:result.text,topic:result.topic});
-      controller.history = controller.history.slice(-20);
-      setState('idle', endpoint ? '可以继续追问，或点击朗读回答' : '回答来自简历与主页资料 · 可以继续追问');
-    } catch (error) {
-      if (turn !== controller.turn) return;
-      setState('error', timedOut ? '等待超时，请重新发送问题' : '连接暂时失败，请稍后重新发送', true);
-      input.value = question; send.disabled = false;
-    } finally { clearTimeout(timer); if (turn === controller.turn) controller.request = null; }
+  function showVoice(){dialog.dataset.view='voice';$('.xz-form').hidden=true;$('.xz-text-mode').textContent='暂不开麦，打字聊';$('.xz-mode').textContent='实时语音对话 · 直接开口，随时可以打断';}
+  async function startCall() {
+    endCall();pendingText++;resetTimer();showVoice();log.replaceChildren();rows.clear();history.length=0;
+    const url=realtimeURL();
+    if(!url){setState('error','实时语音服务正在准备中，可以先打字了解承健。',true);return;}
+    if(!window.isSecureContext || !navigator.mediaDevices?.getUserMedia){setState('error','当前浏览器无法开启麦克风，请用支持麦克风的浏览器打开此页面。',true);return;}
+    const epoch=++callEpoch;
+    client=new XiaozhouRealtime({url,
+      onState:(state,message)=>{if(epoch!==callEpoch)return;setState(state,stateMessages[state] || message);if(['listening','speaking','thinking','muted'].includes(state))beginTimer();},
+      onTranscript:event=>{if(epoch===callEpoch)transcript(event);},
+      onAmplitude:level=>{if(epoch===callEpoch)amplitude(level);},
+      onInputLevel:level=>{if(epoch===callEpoch && client?.state!=='speaking')wave(level);},
+      onInterrupt:({responseIds})=>{if(epoch!==callEpoch)return;for(const id of responseIds){const row=rows.get(id);if(row)row.dataset.interrupted='true';}},
+      onError:error=>{if(epoch!==callEpoch)return;clearInterval(timer);timer=null;amplitude(0);wave(0);setState('error',errorMessage(error),true);},
+    });
+    try {await client.start(); if(epoch===callEpoch){beginTimer();setState(client.state);}}
+    catch(error){if(epoch===callEpoch && error.name!=='AbortError')setState('error',errorMessage(error),true);}
   }
-  launch.addEventListener('click', () => {
-    if (!dialog.open) dialog.showModal();
-    launch.setAttribute('aria-expanded','true');
+  function textMode() {
+    endCall();dialog.dataset.view='text';$('.xz-form').hidden=false;$('.xz-text-mode').textContent='切换开麦聊天';
+    $('.xz-mode').textContent='文字备用 · 基于简历与主页的本地资料问答';
+    setState('idle','输入想了解的问题，或点击下方的话题提示');
+    if(!log.children.length)append('assistant',GREETING);
     input.focus({preventScroll:true});
-  });
-  $('.xz-icon').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('close', () => { cancel('可以继续提问'); launch.setAttribute('aria-expanded','false'); launch.focus({preventScroll:true}); });
-  dialog.addEventListener('click', event => {
-    if (event.target !== dialog) return;
-    const r = dialog.getBoundingClientRect();
-    if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close();
-  });
-  $('.xz-form').addEventListener('submit', event => { event.preventDefault(); ask(input.value); });
-  input.addEventListener('input', () => { send.disabled = !input.value.trim(); });
-  input.addEventListener('keydown', event => {
-    if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) { event.preventDefault(); ask(input.value); }
-  });
-  stop.addEventListener('click', () => cancel());
-  $('.xz-hints').addEventListener('click', () => { addHints(log.lastElementChild || log); });
-  $('.xz-clear').addEventListener('click', () => { cancel('可以直接输入，或点一个问题开始'); controller.history=[]; log.replaceChildren(); input.value=''; send.disabled=true; welcome(); });
-  mic.addEventListener('click', () => {
-    if (!Recognition) return;
-    if (controller.recognition) return cancel();
-    cancel('正在请求麦克风…');
-    const turn = controller.turn, draft = input.value.trim(), recognition = new Recognition(); controller.recognition = recognition;
-    recognition.lang='zh-CN'; recognition.continuous=false; recognition.interimResults=true;
-    recognition.onstart = () => { if (turn === controller.turn) setState('listening','正在倾听，说完后可编辑并发送'); };
-    recognition.onresult = event => {
-      if (turn !== controller.turn) return;
-      const transcript = Array.from(event.results).map(r=>r[0].transcript).join('');
-      input.value = (draft ? draft + ' ' + transcript : transcript).slice(0,600); send.disabled=!input.value.trim();
-    };
-    recognition.onerror = event => {
-      if (turn !== controller.turn) return;
-      controller.recognition = null;
-      const messages={'not-allowed':'麦克风未获授权，请在浏览器设置中允许，或直接打字','audio-capture':'没有可用麦克风，请检查设备或直接打字','network':'语音识别连接失败，可以直接打字','no-speech':'没有听清，请重试或直接打字'};
-      setState('error',messages[event.error] || '暂时无法识别语音，可以直接打字',true);
-    };
-    recognition.onend = () => { if (turn === controller.turn) { controller.recognition = null; if (controller.state === 'listening') setState('idle',input.value ? '识别完成，确认文字后点击发送' : '没有听清，可以重试或直接打字'); } };
-    try { recognition.start(); } catch { controller.recognition=null; setState('error','无法开启麦克风，可以直接打字',true); }
-  });
-  document.addEventListener('visibilitychange', () => { if (document.hidden) cancel('已暂停，可以继续提问'); });
-  window.addEventListener('pagehide', () => cancel());
-  welcome();
+  }
+  function addSources(item,sources){
+    const box=document.createElement('div');box.className='xz-sources';
+    for(const source of (Array.isArray(sources)?sources:[]).filter(s=>s&&typeof s==='object').slice(0,3)){
+      const label=typeof source.label==='string'?source.label:'简历与主页资料';
+      const hash=typeof source.url==='string'&&(source.url.startsWith('#')||source.url.startsWith('https://zhouchengjian-user.github.io/personal-homepage/#'))?source.url.split('#')[1]:'';
+      const valid=['home','about','skills','projects','company-projects','influence','contact'].includes(hash);
+      const el=document.createElement(valid?'a':'span');el.textContent=label;
+      if(valid){el.href='#'+hash;el.addEventListener('click',()=>dialog.close());}box.append(el);
+    }item.append(box);
+  }
+  async function askLocal(raw){
+    const q=raw.trim().slice(0,600);if(!q)return;
+    const turn=++pendingText;input.value='';send.disabled=true;append('user',q);setState('thinking','正在查阅简历资料…');
+    await new Promise(resolve=>setTimeout(resolve,160));if(turn!==pendingText || dialog.dataset.view!=='text')return;
+    const result=answerQuestion(q,history);const row=append('assistant',result.text);addSources(row,result.sources);
+    history.push({role:'user',content:q},{role:'assistant',content:result.text,topic:result.topic});if(history.length>20)history.splice(0,history.length-20);
+    setState('idle','回答来自简历与主页资料 · 可以继续追问');log.scrollTop=log.scrollHeight;
+  }
+  for(const q of suggestedQuestions){
+    const text=typeof q==='string'?q:q.question||q.text,button=document.createElement('button');button.type='button';button.className='xz-question';button.textContent=text;
+    button.addEventListener('click',()=>{if(dialog.dataset.view==='text')askLocal(text);else{status.textContent=`试着直接说：“${text}”`;}});$('.xz-prompt-list').append(button);
+  }
+  launch.addEventListener('click',()=>{if(!dialog.open)dialog.showModal();launch.setAttribute('aria-expanded','true');startCall();});
+  $('.xz-icon').addEventListener('click',()=>dialog.close());
+  dialog.addEventListener('close',()=>{pendingText++;endCall();launch.setAttribute('aria-expanded','false');launch.focus({preventScroll:true});});
+  dialog.addEventListener('click',event=>{if(event.target!==dialog)return;const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();});
+  $('.xz-mute').addEventListener('click',()=>{client?.mute(!client.muted);setState(client?.state || 'idle');});
+  $('.xz-interrupt').addEventListener('click',()=>{client?.interrupt();amplitude(0);});
+  $('.xz-hangup').addEventListener('click',()=>endCall());$('.xz-reconnect').addEventListener('click',startCall);
+  $('.xz-text-mode').addEventListener('click',()=>dialog.dataset.view==='voice'?textMode():startCall());
+  $('.xz-hints').addEventListener('click',()=>{const box=$('.xz-prompt-list');box.hidden=!box.hidden;$('.xz-hints').setAttribute('aria-expanded',String(!box.hidden));});
+  $('.xz-form').addEventListener('submit',event=>{event.preventDefault();askLocal(input.value);});
+  input.addEventListener('input',()=>{send.disabled=!input.value.trim();});
+  input.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing){event.preventDefault();askLocal(input.value);}});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){pendingText++;endCall('页面已切到后台，通话已结束；返回后可以重新开麦');}});
+  window.addEventListener('pagehide',()=>{pendingText++;endCall();});
 }
