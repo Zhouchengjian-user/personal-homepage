@@ -50,6 +50,8 @@
       site_page_pathname: path,
       is_incr_site: false,
       is_incr_page: true,
+      // Upstream page UV requires BOTH history flags, even when site PV is disabled.
+      is_histroy_session: previousDay === today,
       is_histroy_session_page: previousDay === today,
       href: 'https://' + host + path,
       nonce_ts: Date.now(),
