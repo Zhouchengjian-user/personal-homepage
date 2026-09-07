@@ -60,5 +60,50 @@
 @keyframes xz-talk { from { transform:scaleY(.35); } to { transform:scaleY(1.9); } }
 @keyframes xz-think { 50% { opacity:.25; } }
 @media (max-width:768px) { .xz-dock { right:5px; bottom:64px; width:137px; } .xz-art { width:76px; } .xz-launch { font-size:11px; padding:8px 10px; } .xz-dialog { inset:auto 12px 12px; width:calc(100% - 24px); height:min(620px,calc(100dvh - 90px)); border-radius:20px; } .xz-form { padding-bottom:max(14px,env(safe-area-inset-bottom)); } .xz-tool,.xz-read,.xz-stop { min-height:40px; } }
-@media (prefers-reduced-motion:reduce) { .xz-art,.xz-eyes,.xz-mouth { animation:none !important; transform:none !important; } .xz-log { scroll-behavior:auto; } }
+@media (prefers-reduced-motion:reduce) { .xz-art,.xz-eyes { animation:none !important; transform:none !important; } .xz-mouth { animation:none !important; } .xz-log { scroll-behavior:auto; } }
 @media (max-width:768px) { .xz-input { font-size:16px; } .xz-tool,.xz-read,.xz-stop { min-height:44px; } }
+/* Voice call upgrade. All styles stay inside the Xiaozhou component. */
+.xz-dock { width:172px; right:6px; }
+.xz-launch { min-height:58px; gap:9px; padding:9px 13px; }
+.xz-invite { display:block; text-align:left; line-height:1.6; color:var(--ink-strong); }
+.xz-invite > span { display:block; font-size:11px; font-weight:400; }
+.xz-art img { display:block; width:100%; height:100%; object-fit:contain; }
+.xz-dialog { height:min(700px,calc(100dvh - 80px)); }
+.xz-dialog [hidden] { display:none !important; }
+.xz-dialog .xz-heading h2 { font-size:15px; }
+.xz-dialog > .xz-status { padding:8px 18px; flex:none; min-height:36px; }
+.xz-dialog > .xz-status p { font-size:12px; line-height:1.55; }
+.xz-dialog > .xz-tools { flex:none; padding:3px 14px 10px; border-top:1px solid var(--line); }
+.xz-voice-stage { display:flex; align-items:center; justify-content:center; gap:26px; flex:none; min-height:165px; padding:7px 22px 0; background:radial-gradient(ellipse at 37% 75%,var(--accent-soft),transparent 65%); }
+.xz-call-avatar .xz-art { width:100px; }
+.xz-call-info { display:flex; flex-direction:column; gap:13px; align-items:center; }
+.xz-call-label { margin:0; color:var(--ink-strong); font-size:12px; }
+.xz-call-time { color:var(--muted); font:400 11px var(--font-mono); font-variant-numeric:tabular-nums; }
+.xz-wave { --xz-level:0; display:flex; height:30px; align-items:center; gap:4px; }
+.xz-wave i { --weight:20; width:3px; height:calc(5px + var(--xz-level) * var(--weight) * 1px); border-radius:5px; background:var(--accent); transition:height 60ms linear; }
+.xz-wave i:nth-child(2n) { --weight:12; }
+.xz-wave i:nth-child(3n) { --weight:25; }
+.xz-call-controls { flex:none; display:flex; align-items:center; justify-content:center; gap:8px; padding:12px 14px; }
+.xz-call-button { min-height:44px; padding:9px 15px; border:1px solid var(--line-strong); border-radius:12px; color:var(--ink-strong); background:var(--panel-2); font:500 12px var(--font-body); cursor:pointer; }
+.xz-hangup { color:#f3cbca; border-color:rgba(220,100,94,.35); background:rgba(170,65,62,.13); }
+.xz-reconnect { background:var(--accent); color:var(--on-accent); border-color:var(--accent); }
+.xz-prompt-list { display:grid; grid-template-columns:1fr 1fr; gap:6px; flex:none; padding:10px 16px; border-top:1px solid var(--line); }
+.xz-prompt-list > p { grid-column:1/-1; margin:0; font-size:10px; color:var(--muted); }
+.xz-message[data-interrupted="true"]::after { content:'已打断'; display:block; color:var(--muted); font-size:10px; margin-top:5px; }
+.xz-dialog[data-view="text"] .xz-voice-stage,.xz-dialog[data-view="text"] .xz-call-controls { display:none; }
+.xz-dialog[data-view="text"] .xz-log { padding-top:10px; }
+.xz-dialog .xz-form { padding-top:10px; }
+.xz-dock[data-state="speaking"] .xz-mouth,.xz-dialog[data-state="speaking"] .xz-mouth { animation:none; }
+.xz-dialog[data-state="thinking"] .xz-eyes { animation:xz-think 1.2s ease-in-out infinite; }
+.xz-dialog .xz-art { animation:xz-float 5s ease-in-out infinite; }
+@media (max-width:768px) {
+  .xz-dock { width:160px; right:0; }
+  .xz-launch { padding:7px 11px; min-height:54px; }
+  .xz-dialog { height:min(700px,calc(100dvh - 24px)); }
+  .xz-voice-stage { min-height:132px; gap:24px; padding-top:0; }
+  .xz-call-avatar .xz-art { width:83px; }
+  .xz-dialog .xz-heading h2 { font-size:14px; }
+  .xz-call-controls { padding:8px 12px; gap:6px; }
+  .xz-call-button { padding:8px 12px; }
+}
+@media (prefers-reduced-motion:reduce) { .xz-wave i { transition:none; } }
