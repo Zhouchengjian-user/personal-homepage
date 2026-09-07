@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260827b" />
+  <link rel="stylesheet" href="style.css?v=20260907stats" />
   <link rel="stylesheet" href="xiaozhou.css?v=20260906" />
 </head>
 <body>
@@ -189,7 +189,19 @@
     </section>
   </main>
 
-  <footer class="footer"><div class="container footer-inner"><p>© <span id="currentYear">2026</span> 周承健 · 保留所有权利</p><div class="footer-links"><a href="#about">关于</a><a href="#skills">技能</a><a href="#projects">作品</a><a href="#influence">影响力</a><a href="#contact">联系</a></div></div></footer>
+  <footer class="footer"><div class="container footer-inner"><p>© <span id="currentYear">2026</span> 周承健 · 保留所有权利</p><div class="footer-links"><a href="#about">关于</a><a href="#skills">技能</a><a href="#projects">作品</a><a href="#influence">影响力</a><a href="#contact">联系</a></div></div>
+    <div class="container visitor-stats" id="visitor-stats" aria-label="主页访问统计">
+      <div class="visitor-stats-values" aria-live="polite" aria-atomic="true">
+        <span>今日访客 <strong id="visitors-today">—</strong> 人</span>
+        <span>今日浏览 <strong id="views-today">—</strong> 次</span>
+        <span>累计浏览 <strong id="views-total">—</strong> 次</span>
+      </div>
+      <p id="visitor-stats-status" role="status">正在读取访问统计…</p>
+      <details class="visitor-stats-details"><summary>统计说明</summary><p>自 2026 年 9 月 7 日接入后开始记录。同一浏览器当天重复访问仅计 1 位访客；更换设备、浏览器或清除网站数据可能重复计数。浏览量按页面加载次数统计，页内跳转不重复计数。数据由 <a href="https://github.com/qiushaocloud/site-counter" target="_blank" rel="noopener noreferrer">Site Counter</a> 提供，服务会接收访问 IP 和浏览器信息，仅在此展示汇总数字。</p></details>
+      <noscript><p>请启用 JavaScript 以查看访问统计。</p></noscript>
+    </div>
+  </footer>
+  <script defer src="visitor-stats.js?v=20260907"></script>
   <script src="script.js?v=20260827b"></script>
   <script type="module" src="xiaozhou.mjs?v=20260906"></script>
 </body>
