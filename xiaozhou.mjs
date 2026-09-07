@@ -1,6 +1,6 @@
 import { answerQuestion, suggestedQuestions } from './xiaozhou-knowledge.mjs';
-import { assistantConfig } from './xiaozhou-config.mjs?v=20260907cloud1';
-import { XiaozhouRealtime } from './xiaozhou-realtime.mjs';
+import { assistantConfig } from './xiaozhou-config.mjs?v=20260907fix2';
+import { XiaozhouRealtime } from './xiaozhou-realtime.mjs?v=20260907fix2';
 
 const GREETING = '你好，我是小周，承健的数字人助手。想了解他的经历、项目和产品思考，直接和我聊聊吧。';
 const portrait = document.querySelector('.hero-portrait');

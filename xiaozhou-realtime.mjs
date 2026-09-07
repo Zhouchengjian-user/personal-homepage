@@ -3,6 +3,8 @@
 const CLOSED = Object.freeze({openness:0, roundness:0, energy:0, playing:false});
 const noop = () => {};
 const abortError = () => Object.assign(new Error('语音连接已取消'), {name:'AbortError'});
+const callError = (code, message) => Object.assign(new Error(message), {code});
+const workletError = (timeout=false) => callError('WORKLET_LOAD', `语音组件加载${timeout ? '超时' : '失败'}，请刷新页面后重新开麦，也可以先打字聊。`);
 const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
 
 function analyseFrames(samples, sampleRate) {
@@ -122,7 +124,7 @@ export class XiaozhouRealtime {
   constructor(options={}) {
     this.options = options; this.session = null; this.generation = 0; this.state = 'idle';
     this.url = options.url || '/api/realtime';
-    this.workletUrl = options.workletUrl || new URL('./xiaozhou-audio-worklet.js', import.meta.url).href;
+    this.workletUrl = options.workletUrl || new URL('./xiaozhou-audio-worklet.js?v=20260907fix2', import.meta.url).href;
     this.contextFactory = options.contextFactory || (()=>new (globalThis.AudioContext || globalThis.webkitAudioContext)());
     this.getUserMedia = options.getUserMedia || (constraints=>navigator.mediaDevices.getUserMedia(constraints));
     this.WebSocket = options.WebSocket || globalThis.WebSocket;
@@ -141,7 +143,7 @@ export class XiaozhouRealtime {
       generation:++this.generation, ready:false, cancelled:false, muted:false, micEpoch:0,
       speechActive:false, turn:0, suppressedTurn:null, activeResponses:new Set(), blocked:new Set(),
       speechItems:new Set(), discardedSpeechItems:new Set(), currentSpeechItem:null,
-      transcriptRows:new Map(), userItems:new Set(), usageIds:new Set()
+      transcriptRows:new Map(), userItems:new Set(), usageIds:new Set(), responseOutput:new Set()
     };
     session.promise = new Promise((resolve, reject)=>{ session.resolve = resolve; session.reject = reject; });
     this.session = session; this.setState('connecting', '正在请求麦克风并连接实时语音');
@@ -167,7 +169,7 @@ export class XiaozhouRealtime {
     });
     await Promise.all([resuming, capturing]);
     if (!this.current(session)) return;
-    await ctx.audioWorklet.addModule(this.workletUrl);
+    await this.loadWorklet(session);
     if (!this.current(session)) return;
     session.mic = ctx.createMediaStreamSource(session.stream);
     session.recorder = new this.WorkletNode(ctx, 'xiaozhou-pcm-recorder');
@@ -188,9 +190,28 @@ export class XiaozhouRealtime {
       try { event = JSON.parse(data); } catch { return; }
       try { this.handleEvent(session, event); } catch (error) { this.fail(session, error); }
     };
-    session.socket.onerror = ()=>this.fail(session, new Error('实时语音连接失败，请检查本地服务或网络'));
+    session.socket.onerror = ()=>this.fail(session, callError('CONNECTION_FAILED', '暂时无法连接云端语音服务，请检查网络后重试，也可以先打字聊。'));
     session.socket.onclose = ()=>this.fail(session, new Error('实时语音连接已断开，可以重新开始'));
     session.timer = this.setTimer(()=>this.fail(session, new Error('连接实时语音超时，请稍后重试')), this.options.connectTimeoutMs || 20000);
+  }
+  async loadWorklet(session) {
+    const bounded = new Promise((_resolve, reject) => {
+      session.cancelWorklet = () => reject(abortError());
+      session.workletTimer = this.setTimer(() => reject(workletError(true)), 15000);
+    });
+    try {
+      await Promise.race([bounded, Promise.resolve().then(() => {
+        if (!this.current(session)) throw abortError();
+        if (!session.ctx.audioWorklet?.addModule || !this.WorkletNode) throw workletError();
+        return session.ctx.audioWorklet.addModule(this.workletUrl);
+      })]);
+    } catch (error) {
+      if (!this.current(session)) throw abortError();
+      throw error?.code === 'WORKLET_LOAD' ? error : workletError();
+    } finally {
+      if (session.workletTimer != null) this.clearTimer(session.workletTimer);
+      session.workletTimer = null; session.cancelWorklet = null;
+    }
   }
   microphonePacket(session, data) {
     if (!this.current(session) || data?.type !== 'pcm' || data.epoch !== session.micEpoch) return;
@@ -266,7 +287,7 @@ export class XiaozhouRealtime {
       const message = event.message || event.error?.message || '实时语音服务返回错误';
       // A cancellation may race normal completion. It does not end the call.
       if (/no.*(active|response)|not.*(active|progress)|cancel.*(no|not)/i.test(message)) return;
-      this.fail(session, new Error(String(message).slice(0, 400))); return;
+      this.fail(session, callError(event.code || event.error?.code || 'VOICE_ERROR', String(message).slice(0, 400))); return;
     }
     if (event.type === 'app.ready') {
       if (session.ready) return;
@@ -309,13 +330,22 @@ export class XiaozhouRealtime {
         this.emit('onUsage', {responseId:id, usage:event.response?.usage ?? null, status:event.response?.status || null});
       }
       if (!this.current(session)) return;
+      const status = event.response?.status;
+      // Ignore intentionally cancelled/blocked turns, including late failures
+      // after an interruption. A failed current turn must not look like silence.
+      if (!session.blocked.has(id) && (status === 'failed' || (status === 'incomplete' && !session.responseOutput.has(id)))) {
+        this.fail(session, callError('RESPONSE_FAILED', '小周这次回答没有生成成功，请重新开麦，也可以先打字聊。')); return;
+      }
       if (!session.player.active) this.restingState(session);
       return;
     }
     if (!id || session.blocked.has(id)) return;
     if (event.type === 'response.audio.delta') {
       if (session.speechActive || session.suppressedTurn === session.turn) { session.blocked.add(id); return; }
-      if (session.player.play(event.delta, id, this.options.outputSampleRate || 24000)) this.setState('speaking', '小周正在说，您可以直接开口打断');
+      if (session.player.play(event.delta, id, this.options.outputSampleRate || 24000)) {
+        session.responseOutput.add(id);
+        this.setState('speaking', '小周正在说，您可以直接开口打断');
+      }
       return;
     }
     const audioText = event.type.startsWith('response.audio_transcript.');
@@ -326,6 +356,7 @@ export class XiaozhouRealtime {
       if (audioText) row.hasAudio = true;
       row[field] = final ? (event.transcript ?? event.text ?? row[field]) : row[field] + (event.delta || '');
       session.transcriptRows.set(id, row);
+      if ((row.audio || row.text).trim()) session.responseOutput.add(id);
       // Audio subtitles and text output can describe the same response. Never
       // concatenate both channels into duplicate spoken sentences.
       if (audioText || !row.hasAudio) this.emit('onTranscript', {id, role:'assistant', text:row.hasAudio ? row.audio : row.text, final});
@@ -334,6 +365,9 @@ export class XiaozhouRealtime {
   disposeSession(session) {
     session.cancelled = true;
     if (session.timer != null) this.clearTimer(session.timer);
+    session.cancelWorklet?.();
+    if (session.workletTimer != null) this.clearTimer(session.workletTimer);
+    session.workletTimer = null;
     if (session.socket) {
       session.socket.onmessage = session.socket.onerror = session.socket.onclose = null;
       try { session.socket.close(); } catch {}
