@@ -440,3 +440,13 @@ h1, h2, h3 { color: var(--ink-strong); overflow-wrap: anywhere; }
 /* Personal work first; company work follows as its own section. */
 #projects, #company-projects { scroll-margin-top: 100px; }
 .company-projects-section { min-height: calc(100svh - 80px); }
+
+/* Visitor counts share the existing footer palette and wrap on mobile. */
+.visitor-stats { margin-top: 16px; padding-top: 20px; border-top: 1px solid var(--line); }
+.visitor-stats-values { display: flex; flex-wrap: wrap; gap: 10px 28px; color: var(--muted); font-size: 12px; }
+.visitor-stats-values > span { white-space: nowrap; }
+.visitor-stats-values strong { margin-inline: 5px; color: var(--accent); font: 600 15px var(--font-mono); font-variant-numeric: tabular-nums; }
+.footer .visitor-stats p { margin-top: 10px; color: var(--muted); font: 400 11px/1.8 var(--font-body); }
+.visitor-stats-details { margin-top: 8px; max-width: 720px; color: var(--muted); font-size: 11px; }
+.visitor-stats-details summary { width: fit-content; min-height: 32px; padding-block: 8px; cursor: pointer; }
+.visitor-stats-details a { text-decoration: underline; text-underline-offset: 3px; }
