@@ -239,35 +239,6 @@ if (canHover.matches && !prefersReducedMotion.matches) {
   });
 }
 
-// 复制邮箱：真实可用，失败时保留邮件直达入口
-const copyEmail = document.getElementById("copyEmail");
-const copyStatus = document.getElementById("copyStatus");
-copyEmail?.addEventListener("click", async () => {
-  const email = copyEmail.dataset.email;
-  copyStatus.textContent = "正在复制邮箱…";
-  try {
-    await Promise.race([
-      navigator.clipboard.writeText(email),
-      new Promise((_, reject) => window.setTimeout(() => reject(new Error("clipboard-timeout")), 1200)),
-    ]);
-    copyStatus.textContent = "邮箱已复制，可以直接粘贴使用。";
-    copyEmail.textContent = "已复制";
-  } catch (_) {
-    const fallbackInput = document.createElement("textarea");
-    fallbackInput.value = email;
-    fallbackInput.setAttribute("readonly", "");
-    fallbackInput.style.position = "fixed";
-    fallbackInput.style.opacity = "0";
-    document.body.appendChild(fallbackInput);
-    fallbackInput.select();
-    const copied = document.execCommand("copy");
-    fallbackInput.remove();
-    copyStatus.textContent = copied ? "邮箱已复制，可以直接粘贴使用。" : `请手动复制：${email}`;
-    if (copied) copyEmail.textContent = "已复制";
-  }
-  window.setTimeout(() => { copyEmail.textContent = "复制邮箱"; }, 3200);
-});
-
 // 分节入场：标题向上，档案行横向进入
 const revealElements = document.querySelectorAll(".section-header, .collection-heading, .about-text, .stat, .skill-row, .project-row, .playground-video-card, .playground-note, .influence-card, .topic-row, .contact-item, .contact-actions");
 if (prefersReducedMotion.matches || !("IntersectionObserver" in window)) {
